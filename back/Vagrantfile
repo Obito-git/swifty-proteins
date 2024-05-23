@@ -1,0 +1,27 @@
+# Vagrantfile
+Vagrant.configure("2") do |config|
+  # Use the Ubuntu 20.04 LTS (Focal Fossa) base image
+  config.vm.box = "ubuntu/focal64"
+
+  # Configure the VM's virtual network
+  config.vm.network "forwarded_port", guest: 5432, host: 5432
+
+  # Provision the VM with a shell script
+  config.vm.provision "shell", inline: <<-SHELL
+    # Update package list and install PostgreSQL
+    apt-get update
+    apt-get install -y postgresql postgresql-contrib
+
+    # Enable remote access to PostgreSQL
+    sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/g" /etc/postgresql/12/main/postgresql.conf
+
+    # Allow password authentication from any IP address
+    echo "host all all 0.0.0.0/0 md5" >> /etc/postgresql/12/main/pg_hba.conf
+
+    # Set a password for the PostgreSQL 'postgres' user
+    sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'password';"
+
+    # Restart PostgreSQL service to apply changes
+    systemctl restart postgresql
+  SHELL
+end
