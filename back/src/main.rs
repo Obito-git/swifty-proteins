@@ -1,16 +1,13 @@
-#[macro_use] extern crate rocket;
+use crate::routes::{login::{hello, hello_raw}, proteins::protected_route};
 
-#[get("/hello/<name>/<age>")]
-fn hello(name: &str, age: u8) -> String {
-    format!("Hello, {} year old named {}!", age, name)
-}
+#[macro_use]
+extern crate rocket;
 
-#[get("/")]
-fn hello_raw() -> String {
-    format!("Hello world!")
-}
+mod auth;
+mod routes;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![hello, hello_raw])
+    //let users = Map
+    rocket::build().mount("/", routes![hello, hello_raw, protected_route])
 }
