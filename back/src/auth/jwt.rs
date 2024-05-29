@@ -6,11 +6,15 @@ use jsonwebtoken::{
 };
 use lazy_static::lazy_static;
 use rand::Rng;
+use rocket::http::ContentType;
+use rocket::request::Request;
+use rocket::response::{Responder, Response};
+use rocket::serde::json::json;
 use serde::{Deserialize, Serialize};
 
+//TODO access modifiers
 lazy_static! {
     static ref ACCESS_SECRET: String = generate_secret();
-    static ref REFRESH_SECRET: String = generate_secret();
 }
 
 fn generate_secret() -> String {
@@ -22,35 +26,55 @@ pub fn get_access_secret() -> &'static [u8] {
     ACCESS_SECRET.as_bytes()
 }
 
-pub fn get_refresh_secret() -> &'static [u8] {
-    REFRESH_SECRET.as_bytes()
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     pub sub: String,
     exp: usize,
 }
 
-pub fn generate_token(username: &str, secret: &[u8], expiry: usize) -> String {
+pub struct AccessToken {
+    pub token: String,
+    pub expiry: u64,
+}
+
+impl<'r> Responder<'r, 'static> for AccessToken {
+    fn respond_to(self, req: &'r Request<'_>) -> rocket::response::Result<'static> {
+        let json = json!({
+            "token": self.token,
+            "expiry": self.expiry,
+        });
+        Response::build_from(json.respond_to(req)?)
+            .header(ContentType::JSON)
+            .ok()
+    }
+}
+
+const EXPIRY: u64 = 3600;
+
+pub fn generate_token(username: &str) -> AccessToken {
     let start = SystemTime::now();
     let since_the_epoch = start
         .duration_since(UNIX_EPOCH)
         .expect("Time went backwards");
     let iat = since_the_epoch.as_secs();
-    let exp = iat + expiry as u64;
+    let exp = iat + EXPIRY;
 
     let claims = Claims {
         sub: username.to_owned(),
         exp: exp as usize,
     };
 
-    encode(
+    //TODO: handle error
+    let token = encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret(secret),
+        &EncodingKey::from_secret(get_access_secret()),
     )
-    .unwrap()
+    .unwrap();
+    AccessToken {
+        token,
+        expiry: EXPIRY,
+    }
 }
 
 pub fn validate_token(token: &str, secret: &[u8]) -> Result<TokenData<Claims>, Error> {

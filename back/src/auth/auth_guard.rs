@@ -1,7 +1,7 @@
-use crate::auth::jwt::{validate_token, Claims};
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
-use std::str::FromStr;
+
+use crate::auth::jwt::validate_token;
 
 use super::jwt::get_access_secret;
 

@@ -1,20 +1,17 @@
-use crate::database::services::user_service::UserService;
-use crate::routes::{
-    login::{hello, hello_raw},
-    proteins::protected_route,
-};
+use crate::rest::routes::login::handle_login;
+use crate::rest::routes::proteins::protected_route;
+use database::pool::DbConn;
 
 #[macro_use]
 extern crate rocket;
 
 mod auth;
 mod database;
-mod routes;
+mod rest;
 
 #[launch]
 fn rocket() -> _ {
-    let mut db = database::establish_connection();
-    //let users = Map
-    //UserService::create(&mut db, "name", "login", "password");
-    rocket::build().mount("/", routes![hello, hello_raw, protected_route])
+    rocket::build()
+        .mount("/", routes![protected_route, handle_login])
+        .attach(DbConn::fairing())
 }
