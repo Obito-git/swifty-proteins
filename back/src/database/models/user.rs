@@ -1,18 +1,30 @@
+use crate::auth::sha512::convert;
 use crate::database::schema::users;
+use crate::rest::model::user::UserCredentials;
 use diesel::prelude::*;
+use rocket::serde::json::Json;
 
-#[derive(Queryable, Selectable, Debug)]
+#[derive(Queryable, Selectable)]
 #[diesel(table_name = users)]
-#[diesel(check_for_backend(diesel::pg::Pg))]
+#[allow(dead_code)]
 pub struct User {
-    pub id: i32,
+    id: i32,
     pub username: String,
     pub password: String,
 }
 
 #[derive(Insertable)]
 #[diesel(table_name = users)]
-pub struct NewUser<'a> {
-    pub username: &'a str,
-    pub password: &'a str,
+pub struct NewUser {
+    pub username: String,
+    pub password: String,
+}
+
+impl NewUser {
+    pub fn from_json(json: Json<UserCredentials>) -> NewUser {
+        NewUser {
+            username: json.login.clone(),
+            password: convert(&json.password),
+        }
+    }
 }

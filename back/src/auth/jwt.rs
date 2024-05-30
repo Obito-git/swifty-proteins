@@ -37,6 +37,7 @@ pub struct AccessToken {
     pub expiry: u64,
 }
 
+//TODO: here to map token to json, find better way to store this code
 impl<'r> Responder<'r, 'static> for AccessToken {
     fn respond_to(self, req: &'r Request<'_>) -> rocket::response::Result<'static> {
         let json = json!({
