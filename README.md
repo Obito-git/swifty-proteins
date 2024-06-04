@@ -37,8 +37,9 @@ Install the Diesel CLI with the following command:
 - **Flutter Library for 3D Object Rendering**: To render 3D objects in Flutter, we can utilize the [flutter_3d](https://fluttergems.dev/3d/) library.
 
 ### General Tasks
-- [ ] Add an icon.
-- [ ] Implement a launch screen that appears for a few seconds.
+- [x] Define different routes
+- [x] Add an icon.
+- [x] Implement a launch screen that appears for a few seconds. (It is default feature of flutter)
 
 ### Login View
 - [ ] Implement authentication screen with options for fingerprint and password.
