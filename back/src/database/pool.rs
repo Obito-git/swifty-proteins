@@ -1,4 +1,4 @@
 use rocket_sync_db_pools::database;
 
-#[database("postgres_db")]
-pub struct DbConn(diesel::PgConnection);
+#[database("sqlite_db")]
+pub struct DbConn(diesel::SqliteConnection);

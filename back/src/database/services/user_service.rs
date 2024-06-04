@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use diesel::{PgConnection, RunQueryDsl};
+use diesel::{RunQueryDsl, SqliteConnection};
 
 use crate::database::models::user::{NewUser, User};
 use crate::database::schema::users as users_table;
@@ -9,20 +9,21 @@ use crate::rest::model::user::{UserCredentials, UserData};
 pub struct UserService;
 
 impl UserService {
-    //TODO: consider to return Result
-    //TODO: handle already existing username
-
-    pub fn create(connection: &mut PgConnection, user_data: &NewUser) -> UserData {
-        let new_user = diesel::insert_into(users_table::table)
+    //TODO: test expects
+    pub fn create(connection: &mut SqliteConnection, user_data: &NewUser) -> UserData {
+        diesel::insert_into(users_table::table)
             .values(user_data)
-            .returning(User::as_returning())
-            .get_result(connection)
-            //TODO: consider to return Result
+            .execute(connection)
             .expect("Error saving new user");
-        UserData::from(new_user)
+        UserData::from(
+            users_table::table
+                .filter(username.eq(&user_data.username))
+                .first::<User>(connection)
+                .expect("Error loading user"),
+        )
     }
 
-    pub fn exists(connection: &mut PgConnection, user_credentials: &UserCredentials) -> bool {
+    pub fn exists(connection: &mut SqliteConnection, user_credentials: &UserCredentials) -> bool {
         users_table::table
             .filter(username.eq(user_credentials.login.as_str()))
             .filter(password.eq(user_credentials.password.as_str()))

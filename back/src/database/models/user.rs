@@ -5,6 +5,7 @@ use diesel::prelude::*;
 use rocket::serde::json::Json;
 
 #[derive(Queryable, Selectable)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 #[diesel(table_name = users)]
 #[allow(dead_code)]
 pub struct User {
@@ -15,6 +16,7 @@ pub struct User {
 
 #[derive(Insertable)]
 #[diesel(table_name = users)]
+#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct NewUser {
     pub username: String,
     pub password: String,
