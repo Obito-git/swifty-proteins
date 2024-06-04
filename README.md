@@ -3,12 +3,12 @@
 **Swifty Proteins** is a project focused on protein visualization and account management. The project utilizes various technologies and tools to achieve its goals.
 
 backend:
-api: rocket
-orm: diesel
-database: postgres
+- api: rocket
+- orm: diesel
+- database: SQLite
 
 frontend:
-flutter
+- flutter
 
 ## Getting Started
 
