@@ -3,6 +3,14 @@ name = "back"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+name = "database"
+path = "lib/database/lib.rs"
+
+[[bin]]
+name = "back"
+path = "src/main.rs"
+
 [dependencies]
 # API
 rocket = { version = "0.5.0", features = ["json"] }

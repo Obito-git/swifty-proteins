@@ -1,8 +1,5 @@
-use crate::auth::sha512::convert;
-use crate::database::schema::users;
-use crate::rest::model::user::UserCredentials;
-use diesel::prelude::*;
-use rocket::serde::json::Json;
+use crate::schema::users;
+use diesel::{Insertable, Queryable, Selectable};
 
 #[derive(Queryable, Selectable)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
@@ -17,16 +14,19 @@ pub struct User {
 #[derive(Insertable)]
 #[diesel(table_name = users)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
-pub struct NewUser {
+pub struct UserCredentials {
     pub username: String,
     pub password: String,
 }
 
-impl NewUser {
-    pub fn from_json(json: Json<UserCredentials>) -> NewUser {
-        NewUser {
-            username: json.login.clone(),
-            password: convert(&json.password),
+pub struct UserData {
+    pub username: String,
+}
+
+impl From<User> for UserData {
+    fn from(user: User) -> UserData {
+        UserData {
+            username: user.username,
         }
     }
 }
