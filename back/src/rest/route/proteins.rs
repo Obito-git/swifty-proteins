@@ -1,30 +1,20 @@
-use crate::auth::auth_guard::AuthenticatedUser;
-/*
-use crate::database::models::protein::Protein;
-use crate::database::pool::DbConn;
-use crate::database::services::protein_service::get_proteins_page1;
-use crate::rest::model::protein::ProteinPageDto;
+use crate::rest::model::pagination::DataPageDto;
+use crate::{auth::auth_guard::AuthenticatedUser, rest::model::protein::ProteinPageInnerDto};
+use database::{
+    pool::DbConn,
+    repository::protein_repository::read_paginated,
+};
 use rocket::response::status::BadRequest;
 
-#[get("/protected")]
-pub fn protected_route(user: AuthenticatedUser) -> String {
-    format!("Hello, {}!", user.username)
-}
-
-//TODO: replace param with optional, bad request with struct
+//TODO: imporove route/replace return type with DTO
+//TODO: make protected AuthenticatedUser
 #[get("/proteins?<page>")]
 pub async fn get_proteins_page(
     db_conn: DbConn,
     page: i64,
-) -> Result<ProteinPageDto, BadRequest<String>> {
-    match db_conn
-        .run(move |c| get_proteins_page1(c, page, None))
-        .await
-    {
-        Ok(proteins) => Ok(ProteinPageDto::from_proteins(proteins, 1, 1)),
+) -> Result<DataPageDto<ProteinPageInnerDto>, BadRequest<String>> {
+    match db_conn.run(move |c| read_paginated(c, page, None)).await {
+        Ok(proteins) => Ok(proteins.into()),
         Err(e) => Err(BadRequest(format!("Error: {}", e))),
     }
 }
-
-
- */

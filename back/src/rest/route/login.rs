@@ -1,7 +1,6 @@
-use crate::auth::jwt::{generate_token, AccessToken};
+use crate::auth::jwt::AccessToken;
 use crate::rest::model::user::{UserCredentialsDto, UserDataDto};
 use crate::rest::service::user_service::{signin_user, signup_user};
-use database::models::user::UserCredentials;
 use database::pool::DbConn;
 use rocket::http::Status;
 use rocket::response::status::{BadRequest, Custom};

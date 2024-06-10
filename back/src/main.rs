@@ -1,5 +1,6 @@
 #[macro_use] extern crate rocket;
 
+use crate::rest::route::proteins::get_proteins_page;
 use crate::rest::route::login::{handle_signin, handle_signup};
 use database::pool::DbConn;
 
@@ -15,7 +16,7 @@ fn rocket() -> _ {
                 //protected_route,
                 handle_signin,
                 handle_signup,
-                //get_proteins_page
+                get_proteins_page
             ],
         )
         .attach(DbConn::fairing())

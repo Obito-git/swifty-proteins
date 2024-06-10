@@ -22,6 +22,7 @@ pub fn read_paginated(
         current_page: page,
         page_size,
         total_items,
+        items_on_page: proteins.as_ref().map(|p| p.len() as i64).unwrap_or(0),
     };
     Ok(DataPage {
         data: proteins?,
