@@ -9,26 +9,8 @@ services:
       - network
     build:
       context: ./back
-      #args:
-      #  - DATABASE_URL=${DATABASE_URL}
-    depends_on:
-      - postgres
     ports:
       - "8000:8000"
-  
-  postgres:
-    image: postgres:latest
-    env_file:
-      - .env
-    networks:
-      - network
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
 
 networks:
   network:
