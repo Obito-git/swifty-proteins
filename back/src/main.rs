@@ -1,8 +1,7 @@
+#[macro_use] extern crate rocket;
+
 use crate::rest::route::login::{handle_signin, handle_signup};
 use database::pool::DbConn;
-
-#[macro_use]
-extern crate rocket;
 
 mod auth;
 mod rest;

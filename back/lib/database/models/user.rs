@@ -1,4 +1,5 @@
 use crate::schema::users;
+
 use diesel::{Insertable, Queryable, Selectable};
 
 #[derive(Queryable, Selectable)]
