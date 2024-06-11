@@ -6,6 +6,7 @@ use crate::auth::jwt::validate_token;
 use super::jwt::get_access_secret;
 
 //TODO: move it to the request preprocessing module, and provide validation for the username and password
+#[allow(dead_code)]
 pub struct AuthenticatedUser {
     pub username: String,
 }

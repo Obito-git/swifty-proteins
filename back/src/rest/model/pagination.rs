@@ -1,11 +1,8 @@
 use entity_manager::models::pagination::{DataPage, PageMetadata};
-use rocket::http::ContentType;
-use rocket::response::Responder;
-use rocket::serde::json::json;
 use rocket::serde::Serialize;
-use rocket::{Request, Response};
 
 #[derive(Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct PageMetadataDto {
     pub total_pages: i64,
     pub current_page: i64,
@@ -27,6 +24,7 @@ impl From<PageMetadata> for PageMetadataDto {
 }
 
 #[derive(Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct DataPageDto<T>
 where
     T: Serialize,
@@ -44,21 +42,5 @@ where
             metadata: PageMetadataDto::from(data_page.metadata),
             data: data_page.data.into_iter().map(U::from).collect(),
         }
-    }
-}
-
-impl<'r, T> Responder<'r, 'static> for DataPageDto<T>
-where
-    T: Serialize,
-{
-    fn respond_to(self, req: &'r Request<'_>) -> rocket::response::Result<'static> {
-        let json = json!({
-            "metadata": self.metadata,
-            "data": self.data,
-        });
-        //TODO: check this expect
-        Response::build_from(json.respond_to(req)?)
-            .header(ContentType::JSON)
-            .ok()
     }
 }

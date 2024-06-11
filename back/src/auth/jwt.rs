@@ -6,15 +6,11 @@ use jsonwebtoken::{
 };
 use lazy_static::lazy_static;
 use rand::Rng;
-use rocket::http::ContentType;
-use rocket::request::Request;
-use rocket::response::{Responder, Response};
-use rocket::serde::json::json;
-use serde::{Deserialize, Serialize};
+use rocket::serde::{Deserialize, Serialize};
 
 //TODO access modifiers
 lazy_static! {
-    static ref ACCESS_SECRET: String = generate_secret();
+     static ref ACCESS_SECRET: String = generate_secret();
 }
 
 fn generate_secret() -> String {
@@ -27,27 +23,17 @@ pub fn get_access_secret() -> &'static [u8] {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
 pub struct Claims {
     pub sub: String,
     exp: usize,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
 pub struct AccessToken {
     pub token: String,
     pub expiry: u64,
-}
-
-//TODO: here to map token to json, find better way to store this code
-impl<'r> Responder<'r, 'static> for AccessToken {
-    fn respond_to(self, req: &'r Request<'_>) -> rocket::response::Result<'static> {
-        let json = json!({
-            "token": self.token,
-            "expiry": self.expiry,
-        });
-        Response::build_from(json.respond_to(req)?)
-            .header(ContentType::JSON)
-            .ok()
-    }
 }
 
 const EXPIRY: u64 = 3600;

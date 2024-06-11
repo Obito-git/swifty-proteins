@@ -10,17 +10,17 @@ use rocket::serde::json::Json;
 pub async fn handle_signin(
     db_conn: DbConn,
     credentials: Json<UserCredentialsDto>,
-) -> Result<AccessToken, BadRequest<String>> {
+) -> Result<Json<AccessToken>, BadRequest<String>> {
     //TODO: handle errors
-    Ok(signin_user(db_conn, credentials.into()).await)
+    Ok(Json(signin_user(db_conn, credentials.into()).await))
 }
 
 #[post("/signup", format = "json", data = "<credentials>")]
 pub async fn handle_signup(
     db_conn: DbConn,
     credentials: Json<UserCredentialsDto>,
-) -> Result<Custom<UserDataDto>, BadRequest<String>> {
+) -> Result<Custom<Json<UserDataDto>>, BadRequest<String>> {
     let user = signup_user(db_conn, credentials.into()).await;
 
-    Ok(Custom(Status::Created, user))
+    Ok(Custom(Status::Created, Json(user)))
 }

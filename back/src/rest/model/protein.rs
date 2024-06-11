@@ -2,6 +2,7 @@ use entity_manager::models::protein::Protein;
 use rocket::serde::Serialize;
 
 #[derive(Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct ProteinPageInnerDto {
     pub code: String,
 }

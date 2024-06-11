@@ -1,9 +1,6 @@
 use entity_manager::models::user::{UserCredentials, UserData};
-use rocket::http::ContentType;
-use rocket::response::Responder;
-use rocket::serde::json::{json, Json};
-use rocket::serde::Deserialize;
-use rocket::{Request, Response};
+use rocket::serde::json::Json;
+use rocket::serde::{Deserialize, Serialize};
 
 use crate::auth::sha512::convert;
 
@@ -32,6 +29,8 @@ impl From<UserCredentialsDto> for UserCredentials {
     }
 }
 
+#[derive(Serialize)]
+#[serde(crate = "rocket::serde")]
 pub struct UserDataDto {
     pub username: String,
 }
@@ -41,17 +40,5 @@ impl From<UserData> for UserDataDto {
         UserDataDto {
             username: user.username,
         }
-    }
-}
-
-impl<'r> Responder<'r, 'static> for UserDataDto {
-    fn respond_to(self, req: &'r Request<'_>) -> rocket::response::Result<'static> {
-        let json = json!({
-            "username": self.username,
-        });
-        //TODO: check this expect
-        Response::build_from(json.respond_to(req)?)
-            .header(ContentType::JSON)
-            .ok()
     }
 }
