@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class ProteinScreen extends StatelessWidget {
-  const ProteinScreen({super.key});
+  final String code;
+  const ProteinScreen({super.key, required this.code});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Protein Screen')),
-      body: const Center(child: Text('Protein Page')),
+      body: Center(child: Text('Protein Page of code: $code')),
     );
   }
 }

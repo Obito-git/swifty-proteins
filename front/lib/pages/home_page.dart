@@ -16,7 +16,9 @@ class RootScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () => context.go(Routes.protein.route),
+              //TODO: refactor and implement actual logic
+              onPressed: () => context.goNamed(Routes.protein.name,
+                  pathParameters: {"code": "123"}),
               child: const Text('Go to Protein Screen'),
             ),
           ],

@@ -5,14 +5,16 @@ import 'package:swifty_proteins/pages/home_page.dart';
 import 'package:swifty_proteins/pages/protein_page.dart';
 
 enum Routes {
-  root("/"),
-  auth("/auth"),
-  protein("/protein"),
+  //TODO: refactor structure
+  root(route: "/", name: "root"),
+  auth(route: "/auth", name: "auth"),
+  protein(route: "protein/:code", name: "protein"),
   ;
 
   final String route;
+  final String name;
 
-  const Routes(this.route);
+  const Routes({required this.route, required this.name});
 }
 
 class AppRoute extends StatelessWidget {
@@ -20,16 +22,21 @@ class AppRoute extends StatelessWidget {
     routes: <RouteBase>[
       GoRoute(
         path: Routes.root.route,
+        name: Routes.root.name,
         builder: (context, state) => const RootScreen(),
         routes: [
           GoRoute(
             path: Routes.protein.route,
-            builder: (context, state) => const ProteinScreen(),
+            name: Routes.protein.name,
+            builder: (context, state) =>
+                //TODO: add null check for code
+                ProteinScreen(code: state.pathParameters['code']!),
           )
         ],
       ),
       GoRoute(
         path: Routes.auth.route,
+        name: Routes.auth.name,
         builder: (context, state) => const AuthScreen(),
       ),
     ],
