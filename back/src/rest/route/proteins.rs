@@ -18,3 +18,10 @@ pub async fn get_proteins_page(
         Err(e) => Err(BadRequest(format!("Error: {}", e))),
     }
 }
+
+//TODO: implement and make protected
+#[get("/proteins/<code>")]
+pub fn get_protein_mock(code: String) {
+    println!("Protein code: {}, returning mock data", code);
+    
+}

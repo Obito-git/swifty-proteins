@@ -8,4 +8,5 @@ use serde::Serialize;
 #[allow(dead_code)]
 pub struct Protein {
     pub code: String,
+    pub file_metadata_id: Option<i32>,
 }

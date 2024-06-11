@@ -1,4 +1,4 @@
-use crate::models::pagination::{DataPage, Metadata};
+use crate::models::pagination::{DataPage, PageMetadata};
 use crate::models::protein::Protein;
 use crate::schema::proteins as proteins_table;
 use diesel::{QueryDsl, RunQueryDsl, SqliteConnection};
@@ -17,7 +17,7 @@ pub fn read_paginated(
         .limit(page_size)
         .load::<Protein>(conn);
     let total_items = proteins_table::table.count().get_result::<i64>(conn)?;
-    let metadata = Metadata {
+    let metadata = PageMetadata {
         total_pages: total_items / page_size,
         current_page: page,
         page_size,

@@ -1,7 +1,15 @@
-CREATE TABLE IF NOT EXISTS proteins
-(
-    code TEXT PRIMARY KEY NOT NULL
+CREATE TABLE IF NOT EXISTS file_metadata (
+    id       INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    path TEXT NOT NULL,
+    description TEXT
 );
+
+CREATE TABLE IF NOT EXISTS proteins (
+    code TEXT PRIMARY KEY NOT NULL,
+    file_metadata_id INTEGER,
+    FOREIGN KEY (file_metadata_id) REFERENCES file_metadata(id)
+); 
 
 INSERT INTO proteins (code)
 VALUES ('001'),

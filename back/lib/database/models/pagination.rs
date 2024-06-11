@@ -1,4 +1,4 @@
-pub struct Metadata {
+pub struct PageMetadata {
     pub total_pages: i64,
     pub current_page: i64,
     pub page_size: i64,
@@ -7,6 +7,6 @@ pub struct Metadata {
 }
 
 pub struct DataPage<T> {
-    pub metadata: Metadata,
+    pub metadata: PageMetadata,
     pub data: Vec<T>,
 }

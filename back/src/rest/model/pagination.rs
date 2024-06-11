@@ -1,4 +1,4 @@
-use database::models::pagination::{DataPage, Metadata};
+use database::models::pagination::{DataPage, PageMetadata};
 use rocket::http::ContentType;
 use rocket::response::Responder;
 use rocket::serde::json::json;
@@ -6,7 +6,7 @@ use rocket::serde::Serialize;
 use rocket::{Request, Response};
 
 #[derive(Serialize)]
-pub struct MetadataDto {
+pub struct PageMetadataDto {
     pub total_pages: i64,
     pub current_page: i64,
     pub page_size: i64,
@@ -14,22 +14,24 @@ pub struct MetadataDto {
     pub items_on_page: i64,
 }
 
-impl From<Metadata> for MetadataDto {
-    fn from(metadata: Metadata) -> MetadataDto {
-        MetadataDto {
+impl From<PageMetadata> for PageMetadataDto {
+    fn from(metadata: PageMetadata) -> PageMetadataDto {
+        PageMetadataDto {
             total_pages: metadata.total_pages,
             current_page: metadata.current_page,
             page_size: metadata.page_size,
             total_items: metadata.total_items,
             items_on_page: metadata.items_on_page,
-
         }
     }
 }
 
 #[derive(Serialize)]
-pub struct DataPageDto<T> where T: Serialize {
-    pub metadata: MetadataDto,
+pub struct DataPageDto<T>
+where
+    T: Serialize,
+{
+    pub metadata: PageMetadataDto,
     pub data: Vec<T>,
 }
 
@@ -39,13 +41,16 @@ where
 {
     fn from(data_page: DataPage<T>) -> DataPageDto<U> {
         DataPageDto {
-            metadata: MetadataDto::from(data_page.metadata),
+            metadata: PageMetadataDto::from(data_page.metadata),
             data: data_page.data.into_iter().map(U::from).collect(),
         }
     }
 }
 
-impl<'r, T> Responder<'r, 'static> for DataPageDto<T> where T: Serialize {
+impl<'r, T> Responder<'r, 'static> for DataPageDto<T>
+where
+    T: Serialize,
+{
     fn respond_to(self, req: &'r Request<'_>) -> rocket::response::Result<'static> {
         let json = json!({
             "metadata": self.metadata,
@@ -57,5 +62,3 @@ impl<'r, T> Responder<'r, 'static> for DataPageDto<T> where T: Serialize {
             .ok()
     }
 }
-
-
