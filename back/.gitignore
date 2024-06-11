@@ -3,3 +3,4 @@ target
 .vagrant
 .env
 database/*.db*
+lib/*/target

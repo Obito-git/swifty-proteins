@@ -1,4 +1,4 @@
-use database::models::user::{UserCredentials, UserData};
+use entity_manager::models::user::{UserCredentials, UserData};
 use rocket::http::ContentType;
 use rocket::response::Responder;
 use rocket::serde::json::{json, Json};

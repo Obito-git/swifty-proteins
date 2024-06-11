@@ -1,4 +1,4 @@
-use database::models::pagination::{DataPage, PageMetadata};
+use entity_manager::models::pagination::{DataPage, PageMetadata};
 use rocket::http::ContentType;
 use rocket::response::Responder;
 use rocket::serde::json::json;

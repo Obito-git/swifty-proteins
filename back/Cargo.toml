@@ -3,15 +3,9 @@ name = "back"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-name = "database"
-path = "lib/database/lib.rs"
-
-[[bin]]
-name = "back"
-path = "src/main.rs"
-
 [dependencies]
+local_storage = { path = "lib/local_storage" }
+entity_manager = { path = "lib/entity_manager" }
 # API
 rocket = { version = "0.5.0", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }
@@ -23,11 +17,6 @@ rand = "0.8"
 base64 = "0.22.1"
 hmac-sha512 = "1.1.5"
 hex = "0.4.3"
-
-# Database
-diesel = { version = "2.1.0", features = ["sqlite", "r2d2"] }
-dotenvy = "0.15"
-rocket_sync_db_pools = { version = "0.1.0", features = ["diesel_sqlite_pool"] }
 
 # Utils
 lazy_static = "1.4.0"

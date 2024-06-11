@@ -1,7 +1,7 @@
 use crate::auth::jwt::AccessToken;
 use crate::rest::model::user::{UserCredentialsDto, UserDataDto};
 use crate::rest::service::user_service::{signin_user, signup_user};
-use database::pool::DbConn;
+use entity_manager::pool::DbConn;
 use rocket::http::Status;
 use rocket::response::status::{BadRequest, Custom};
 use rocket::serde::json::Json;

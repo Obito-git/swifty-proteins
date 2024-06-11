@@ -1,4 +1,4 @@
-use database::models::protein::Protein;
+use entity_manager::models::protein::Protein;
 use rocket::serde::Serialize;
 
 #[derive(Serialize)]

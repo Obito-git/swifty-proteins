@@ -1,6 +1,6 @@
 use crate::rest::model::pagination::DataPageDto;
 use crate::{auth::auth_guard::AuthenticatedUser, rest::model::protein::ProteinPageInnerDto};
-use database::{
+use entity_manager::{
     pool::DbConn,
     repository::protein_repository::read_paginated,
 };
