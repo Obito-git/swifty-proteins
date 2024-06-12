@@ -23,13 +23,18 @@ pub async fn get_proteins_page(
 }
 //TODO: implement and make protected
 #[get("/proteins/<code>")]
-pub async fn get_protein_mock(db_conn: DbConn, code: &str) -> (ContentType, NamedFile) {
-    println!("Protein code: {}, returning mock data", code);
-
-    let path = PathBuf::from(
-        "/media/amyroshn/queu/swifty-proteins/back/database/local_storage/matilda.glb",
-    );
-    protein_service::get_protein_model(db_conn, code).await;
-    let content_type = ContentType::new("model", "gltf-binary");
-    (content_type, NamedFile::open(path).await.ok().unwrap())
+pub async fn get_protein_mock(
+    db_conn: DbConn,
+    code: &str,
+) -> Result<(ContentType, NamedFile), BadRequest<String>> {
+    match protein_service::get_protein_model(db_conn, code).await {
+        Ok(named_file) => {
+            let content_type = ContentType::new("model", "gltf-binary");
+            Ok((content_type, named_file))
+        }
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            Err(BadRequest(e))
+        }
+    }
 }
