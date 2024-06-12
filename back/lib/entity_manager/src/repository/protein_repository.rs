@@ -1,7 +1,7 @@
 use crate::models::pagination::{DataPage, PageMetadata};
 use crate::models::protein::Protein;
 use crate::schema::proteins as proteins_table;
-use diesel::{QueryDsl, RunQueryDsl, SqliteConnection};
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SqliteConnection};
 
 const DEFAULT_PAGE_SIZE: i64 = 50;
 
@@ -28,4 +28,18 @@ pub fn read_paginated(
         data: proteins?,
         metadata,
     })
+}
+
+pub fn read_by_code(
+    conn: &mut SqliteConnection,
+    code: &str,
+) -> Result<Option<Protein>, diesel::result::Error> {
+    match proteins_table::table
+        .filter(proteins_table::code.eq(code))
+        .first::<Protein>(conn)
+    {
+        Ok(protein) => Ok(Some(protein)),
+        Err(diesel::result::Error::NotFound) => Ok(None),
+        Err(err) => Err(err),
+    }
 }
