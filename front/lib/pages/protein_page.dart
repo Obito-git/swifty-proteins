@@ -11,7 +11,7 @@ class ProteinScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Protein Screen of $code')),
       body: const Center(
         child: ModelViewer(
-          src: 'assets/matilda.glb',
+          src: 'http://10.0.2.2:8000/proteins/666',
           alt: "A 3D model of Matilda",
           ar: true,
           autoRotate: true,

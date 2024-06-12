@@ -3,8 +3,8 @@ use std::path::PathBuf;
 use crate::rest::model::pagination::DataPageDto;
 use crate::rest::model::protein::ProteinPageInnerDto;
 use entity_manager::{pool::DbConn, repository::protein_repository::read_paginated};
-use gltf::json::Root;
-use gltf::Gltf;
+use rocket::fs::NamedFile;
+use rocket::http::ContentType;
 use rocket::response::status::BadRequest;
 use rocket::serde::json::Json;
 
@@ -22,12 +22,12 @@ pub async fn get_proteins_page(
 }
 //TODO: implement and make protected
 #[get("/proteins/<code>")]
-pub fn get_protein_mock(code: String) -> Json<Root> {
+pub async fn get_protein_mock(code: String) -> (ContentType, NamedFile) {
     println!("Protein code: {}, returning mock data", code);
-    let path = PathBuf::from(
-        "/home/amyroshn/workspace/projects/swifty-proteins/back/temp_assets/matilda/scene.gltf",
-    );
-    let a = Gltf::open(path).unwrap();
 
-    Json(a.document.into_json())
+    let path = PathBuf::from(
+        "/media/amyroshn/queu/swifty-proteins/back/database/local_storage/matilda.glb",
+    );
+    let content_type = ContentType::new("model", "gltf-binary");
+    (content_type, NamedFile::open(path).await.ok().unwrap())
 }

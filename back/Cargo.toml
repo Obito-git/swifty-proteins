@@ -4,7 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-local_storage = { path = "lib/local_storage" }
 entity_manager = { path = "lib/entity_manager" }
 # API
 rocket = { version = "0.5.0", features = ["json"] }
@@ -18,6 +17,3 @@ hex = "0.4.3"
 
 # Utils
 lazy_static = "1.4.0"
-
-# toto
-gltf = "1.4.1"
