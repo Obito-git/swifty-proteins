@@ -9,9 +9,9 @@ class ProteinScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Protein Screen of $code')),
-      body: const Center(
+      body: Center(
         child: ModelViewer(
-          src: 'http://10.0.2.2:8000/proteins/666',
+          src: 'http://10.0.2.2:8000/proteins/$code',
           alt: "A 3D model of Matilda",
           ar: true,
           autoRotate: true,

@@ -23,7 +23,7 @@ class AppRoute extends StatelessWidget {
       GoRoute(
         path: Routes.root.route,
         name: Routes.root.name,
-        builder: (context, state) => const RootScreen(),
+        builder: (context, state) => const HomePage(),
         routes: [
           GoRoute(
             path: Routes.protein.route,
