@@ -5,7 +5,6 @@ diesel::table! {
         id -> Integer,
         name -> Text,
         path -> Text,
-        description -> Nullable<Text>,
     }
 }
 

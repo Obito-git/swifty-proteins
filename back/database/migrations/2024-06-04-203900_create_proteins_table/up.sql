@@ -1,8 +1,7 @@
 CREATE TABLE IF NOT EXISTS file_metadata (
     id       INTEGER NOT NULL PRIMARY KEY,
     name TEXT NOT NULL,
-    path TEXT NOT NULL,
-    description TEXT
+    path TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS proteins (
