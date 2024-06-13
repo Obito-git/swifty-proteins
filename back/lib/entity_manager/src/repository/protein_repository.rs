@@ -1,31 +1,41 @@
 use crate::models::pagination::{DataPage, PageMetadata};
 use crate::models::protein::Protein;
 use crate::schema::proteins as proteins_table;
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SqliteConnection};
+use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SqliteConnection, TextExpressionMethods};
 
 const DEFAULT_PAGE_SIZE: i64 = 50;
 
+//TODO: add validation to filter be alphanumeric and page be positive integer and greater than 0
 pub fn read_paginated(
     conn: &mut SqliteConnection,
-    page: i64,
-    page_size: Option<i64>,
+    page: Option<i64>,
+    filter: Option<String>,
 ) -> Result<DataPage<Protein>, diesel::result::Error> {
-    //TODO: add validation for values, handle panic
-    let page_size = page_size.unwrap_or(DEFAULT_PAGE_SIZE);
-    let proteins = proteins_table::table
-        .offset(page * page_size)
-        .limit(page_size)
-        .load::<Protein>(conn);
-    let total_items = proteins_table::table.count().get_result::<i64>(conn)?;
+    let page = page.unwrap_or(1) - 1;
+    let filter_string = format!("%{}%", filter.unwrap_or("".to_string()));
+
+    let proteins_query = proteins_table::table
+        .filter(proteins_table::code.like(&filter_string))
+        .offset(page * DEFAULT_PAGE_SIZE)
+        .limit(DEFAULT_PAGE_SIZE);
+
+    let proteins = proteins_query.load::<Protein>(conn)?;
+
+    let total_items = proteins_table::table
+        .filter(proteins_table::code.like(&filter_string))
+        .count()
+        .get_result::<i64>(conn)?;
+
     let metadata = PageMetadata {
-        total_pages: total_items / page_size,
-        current_page: page,
-        page_size,
+        total_pages: (total_items + DEFAULT_PAGE_SIZE - 1) / DEFAULT_PAGE_SIZE,
+        current_page: page + 1,
+        page_size: DEFAULT_PAGE_SIZE,
         total_items,
-        items_on_page: proteins.as_ref().map(|p| p.len() as i64).unwrap_or(0),
+        items_on_page: proteins.len() as i64,
     };
+
     Ok(DataPage {
-        data: proteins?,
+        data: proteins,
         metadata,
     })
 }

@@ -9,12 +9,13 @@ use rocket::serde::json::Json;
 
 //TODO: imporove route/replace return type with DTO
 //TODO: make protected AuthenticatedUser
-#[get("/proteins?<page>")]
+#[get("/proteins?<page>&<filter>")]
 pub async fn get_proteins_page(
     db_conn: DbConn,
-    page: i64,
+    page: Option<i64>,
+    filter: Option<String>,
 ) -> Result<Json<DataPageDto<ProteinPageInnerDto>>, BadRequest<String>> {
-    match db_conn.run(move |c| read_paginated(c, page, None)).await {
+    match db_conn.run(move |c| read_paginated(c, page, filter)).await {
         Ok(proteins) => Ok(Json(proteins.into())),
         Err(e) => Err(BadRequest(format!("Error: {}", e))),
     }
