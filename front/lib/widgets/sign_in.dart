@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:swifty_proteins/models/user_credentials.dart';
+import 'package:swifty_proteins/services/user_api_service.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -8,9 +10,8 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final UserApiService _userApiService = UserApiService();
   bool _isObscure = true;
   bool _isConfirmObscure = true;
 
@@ -30,14 +31,13 @@ class _SignInState extends State<SignIn> {
     if (_formKey.currentState!.validate()) {
       String username = _usernameController.text.trim();
       String password = _passwordController.text.trim();
-      String confirmPassword = _confirmPasswordController.text.trim();
 
-      print('Username: $username');
-      print('Password: $password');
+      _userApiService
+          .loginUser(UserCredentials(username: username, password: password));
+      //TODO: take token and redirect to home page
 
       _usernameController.clear();
       _passwordController.clear();
-      _confirmPasswordController.clear();
     }
   }
 
