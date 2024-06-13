@@ -1,4 +1,5 @@
 use crate::auth::jwt::{generate_token, AccessToken};
+use crate::rest::model::error::CustomErrorMessage;
 use crate::rest::model::user::{UserCredentialsDto, UserDataDto};
 use entity_manager::pool::DbConn;
 use entity_manager::repository::user_repository;
@@ -16,9 +17,9 @@ pub async fn signin_user(db_conn: DbConn, user_credentials: UserCredentialsDto) 
     }
 }
 
-pub async fn signup_user(db_conn: DbConn, user_credentials: UserCredentialsDto) -> UserDataDto {
-    let user = db_conn
+pub async fn signup_user(db_conn: DbConn, user_credentials: UserCredentialsDto) -> Result<(), CustomErrorMessage> {
+    let res = db_conn
         .run(move |c| user_repository::create(c, &user_credentials.into()))
         .await;
-    user.into()
+    res.map_err(|e| CustomErrorMessage::new(e))
 }
