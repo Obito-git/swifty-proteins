@@ -27,3 +27,10 @@ pub fn exists(connection: &mut SqliteConnection, user_credentials: &UserCredenti
         .first::<User>(connection)
         .is_ok()
 }
+
+pub fn exists_by_username(connection: &mut SqliteConnection, other_username: &str) -> bool {
+    users_table::table
+        .filter(username.eq(other_username))
+        .first::<User>(connection)
+        .is_ok()
+}

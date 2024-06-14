@@ -1,6 +1,6 @@
 use crate::auth::jwt::{generate_token, AccessToken};
 use crate::rest::model::error::JsonErrorMessage;
-use crate::rest::model::user::{UserCredentialsDto, UserDataDto};
+use crate::rest::model::user::UserCredentialsDto;
 use entity_manager::pool::DbConn;
 use entity_manager::repository::user_repository;
 use rocket::http::Status;

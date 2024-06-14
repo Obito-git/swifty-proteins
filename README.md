@@ -47,25 +47,35 @@ Install the Diesel CLI with the following command:
 - [ ] Always show the authentication screen.
 
 ### Protein List View
-- [ ] Add all proteins from ligands.txt (use enum or file as a resource).
-- [ ] Implement a list view with a search bar.
-- [ ] Create a service to retrieve .pdb files from the RCSB website.
+- [x] Add all proteins from ligands.txt (use enum or file as a resource).
+- [x] Implement a list view with a search bar.
 - [ ] Display a popup on error.
-- [ ] Implement animation for loading.
+- [x] Implement animation for loading.
 
 ### Protein View
-- [ ] Implement functionality. (TODO)
+- [ ] Implement functionality. (mostly ok)
 
 ### Backend
 
 #### Auth 
+
 - [x] Implement signin and signup endpoints
 - [x] Password hashing
-- [ ] Login and password validation
+- [x] Login and password validation
+
+##### Sign up
+- [x] Not json body (should return 400/404)
+- [x] Invalid json body (should return 422)
+- [x] Non alphanumeric username (should return 400)
+- [x] Non alphanumeric password (should return 400)
+- [x] Short/long username (should return 400)
+- [x] Short/long password (should return 400)
+- [x] Username already exists (should return 409)
 
 #### Proteins
-- [ ] API with list of all avalaible proteins
-- [ ] Mock of endpoint to retrieve 3d object, should be secured
+- [x] API with list of all avalaible proteins
+- [x] Mock of endpoint to retrieve 3d object
+- [ ] make protein endpoints secured
 - [ ] Proxy that connects previous API and PDB APIs (or wiki if possible)
 - [ ] Endpoints to retrieve atom or protein info, like wiki
 - [ ] Actual implementation of mapping from .pdb to 3d object

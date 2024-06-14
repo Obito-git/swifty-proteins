@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use entity_manager::models::user::{UserCredentials, UserData};
 use lazy_static::lazy_static;
 use regex::Regex;
@@ -15,24 +17,21 @@ lazy_static! {
 #[derive(Debug, Deserialize, Validate)]
 #[serde(crate = "rocket::serde")]
 pub struct UserCredentialsDto {
-    #[validate(length(min = 1, max = 20, message = "Username cannot be empty"))]
+    #[validate(length(min = 2, max = 20, message = "min 2, max 20 characters long"))]
     #[validate(custom(function = "validate_credentials"))]
     pub username: String,
 
-    #[validate(length(
-        min = 6,
-        max = 20,
-        message = "Password must be at least 6 characters long"
-    ))]
+    #[validate(length(min = 6, max = 20, message = "min 6, max 20 characters long"))]
     #[validate(custom(function = "validate_credentials"))]
     pub password: String,
 }
 
 fn validate_credentials(value: &str) -> Result<(), ValidationError> {
     if !ALPHANUMERIC_REGEX.is_match(value) {
-        return Err(ValidationError::new(
-            "Username must be alphanumeric with no spaces",
-        ));
+        return Err(
+            ValidationError::new("should be alphanumeric with no spaces")
+                .with_message(Cow::Borrowed("should be alphanumeric with no spaces")),
+        );
     }
     Ok(())
 }
