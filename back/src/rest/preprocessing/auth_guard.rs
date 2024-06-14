@@ -1,9 +1,8 @@
 use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
 
-use crate::auth::jwt::validate_token;
+use crate::auth::jwt::{get_access_secret, validate_token};
 
-use super::jwt::get_access_secret;
 
 //TODO: move it to the request preprocessing module, and provide validation for the username and password
 #[allow(dead_code)]
