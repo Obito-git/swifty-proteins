@@ -42,8 +42,12 @@ Install the Diesel CLI with the following command:
 - [x] Implement a launch screen that appears for a few seconds. (It is default feature of flutter)
 
 ### Login View
-- [ ] Implement authentication screen with options for fingerprint and password.
-- [ ] Display a popup when authentication fails.
+- [x] Login screen with username and password fields.
+- [x] Implement a button to switch between login and signup.
+- [x] Signup screen with username and password fields.
+- [x] Basic non-empty validation for username and password.
+- [ ] handle finger print authentication
+- [x] Display a popup when authentication fails (displayed when API fails).
 - [ ] Always show the authentication screen.
 
 ### Protein List View
@@ -75,6 +79,8 @@ Install the Diesel CLI with the following command:
 #### Proteins
 - [x] API with list of all avalaible proteins
 - [x] Mock of endpoint to retrieve 3d object
+- [x] Provide possibility to store .glb files locally
+- [x] Store .glb file metadata in the database
 - [ ] make protein endpoints secured
 - [ ] Proxy that connects previous API and PDB APIs (or wiki if possible)
 - [ ] Endpoints to retrieve atom or protein info, like wiki
