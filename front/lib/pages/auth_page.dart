@@ -11,9 +11,21 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final signUp = SignUp();
+  late Widget signUp;
   final signIn = SignIn();
   Widget _option = SignIn();
+
+  void registrationSuccess() {
+    setState(() {
+      _option = signIn;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    signUp = SignUp(registrationSuccess: registrationSuccess);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +57,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
-            OutlinedButton(onPressed: () => context.goNamed(Routes.root.name), child: const Text('ByPass Auth Screen'))
+            OutlinedButton(
+                onPressed: () => context.goNamed(Routes.root.name),
+                child: const Text('ByPass Auth Screen'))
           ],
         ),
       ),

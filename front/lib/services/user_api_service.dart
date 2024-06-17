@@ -23,19 +23,15 @@ class UserApiService {
 
       final jsonBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
-        print('Sign in successful!!!! ${jsonBody['token']}');
         return jsonBody['token'];
       } else if (response.statusCode == 400) {
         throw BadRequestException(jsonBody['message']);
       } else {
-        print('status code ${response.statusCode}');
-        print('response body ${response.body}');
         throw Exception('Something went wrong!');
       }
     } on BadRequestException {
       rethrow;
     } catch (e) {
-      print('$e');
       throw Exception('Something went wrong!');
     }
   }
@@ -55,15 +51,12 @@ class UserApiService {
         }),
       );
 
-      if (response.statusCode == 201) {
-        print('Register successful!!!!');
-        print('response body ${response.body}');
-      } else {
-        print('status code ${response.statusCode}');
-        print('response body ${response.body}');
+      if (response.statusCode != 201) {
+        final jsonBody = jsonDecode(response.body);
+        throw BadRequestException(jsonBody['message']);
       }
     } catch (e) {
-      print('$e');
+      throw Exception('Something went wrong!');
     }
   }
 }

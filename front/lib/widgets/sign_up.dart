@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:swifty_proteins/app_route.dart';
+import 'package:swifty_proteins/exception/bad_request_exception.dart';
 import 'package:swifty_proteins/models/user_credentials.dart';
 import 'package:swifty_proteins/services/user_api_service.dart';
+import 'package:swifty_proteins/widgets/error_dialog.dart';
 
 class SignUp extends StatefulWidget {
+  final Function() registrationSuccess;
+
+  const SignUp({super.key, required this.registrationSuccess});
+
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -35,20 +43,21 @@ class _SignUpState extends State<SignUp> {
     if (_formKey.currentState!.validate()) {
       String username = _usernameController.text.trim();
       String password = _passwordController.text.trim();
-      String confirmPassword = _confirmPasswordController.text.trim();
 
-      // TODO: Implement logic
-      print('Username: $username');
-      print('Password: $password');
-      print('Confirm Password: $confirmPassword');
+      try {
+        _apiService
+            .signUp(UserCredentials(username: username, password: password));
 
-      _apiService
-          .signUp(UserCredentials(username: username, password: password));
-
-      // Clear form fields after submission
-      _usernameController.clear();
-      _passwordController.clear();
-      _confirmPasswordController.clear();
+        _usernameController.clear();
+        _passwordController.clear();
+        _confirmPasswordController.clear();
+        if (!context.mounted) return;
+        widget.registrationSuccess();
+      } on BadRequestException catch (e) {
+        showErrorDialog(e.toString(), context);
+      } catch (e) {
+        showErrorDialog("Something went wrong!", context);
+      }
     }
   }
 

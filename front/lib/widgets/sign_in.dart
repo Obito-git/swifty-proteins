@@ -5,6 +5,7 @@ import 'package:swifty_proteins/app_route.dart';
 import 'package:swifty_proteins/exception/bad_request_exception.dart';
 import 'package:swifty_proteins/models/user_credentials.dart';
 import 'package:swifty_proteins/services/user_api_service.dart';
+import 'package:swifty_proteins/widgets/error_dialog.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -32,52 +33,32 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> _submitForm() async {
-  if (_formKey.currentState!.validate()) {
-    String username = _usernameController.text.trim();
-    String password = _passwordController.text.trim();
+    if (_formKey.currentState!.validate()) {
+      String username = _usernameController.text.trim();
+      String password = _passwordController.text.trim();
 
-    try {
-      String? token = await _userApiService
-          .signIn(UserCredentials(username: username, password: password));
+      try {
+        String? token = await _userApiService
+            .signIn(UserCredentials(username: username, password: password));
 
-      if (token != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('jwt_token', token);
+        if (token != null) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('jwt_token', token);
 
-        if (!mounted) return;
-        context.goNamed(Routes.root.name);
-      } else {
-        _showErrorDialog('Failed to retrieve token.');
+          if (!mounted) return;
+          context.goNamed(Routes.root.name);
+        } else {
+          showErrorDialog('Failed to retrieve token.', context);
+        }
+      } on BadRequestException catch (e) {
+        showErrorDialog(e.toString(), context);
+      } catch (e) {
+        showErrorDialog("Something went wrong!", context);
       }
-    } on BadRequestException catch (e) {
-      _showErrorDialog(e.toString());
-    } catch (e) {
-      _showErrorDialog("Something went wrong!");
+
+      _usernameController.clear();
+      _passwordController.clear();
     }
-
-    _usernameController.clear();
-    _passwordController.clear();
-  }
-}
-
-  void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
