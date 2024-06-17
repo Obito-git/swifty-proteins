@@ -1,3 +1,4 @@
+//TODO: check if possible use unsized type
 pub struct PageMetadata {
     pub total_pages: i64,
     pub current_page: i64,

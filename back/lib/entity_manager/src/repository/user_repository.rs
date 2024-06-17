@@ -4,6 +4,7 @@ use crate::schema::users::{password, username};
 use diesel::prelude::*;
 use diesel::{RunQueryDsl, SqliteConnection};
 
+//TODO: merge filters
 //TODO: test expects
 pub fn create(connection: &mut SqliteConnection, user_data: &UserCredentials) -> UserData {
     diesel::insert_into(users_table::table)
