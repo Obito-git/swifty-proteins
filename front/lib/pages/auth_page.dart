@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:swifty_proteins/app_route.dart';
 import 'package:swifty_proteins/widgets/sign_in.dart';
 import 'package:swifty_proteins/widgets/sign_up.dart';
 
@@ -43,6 +45,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
+            OutlinedButton(onPressed: () => context.goNamed(Routes.root.name), child: const Text('ByPass Auth Screen'))
           ],
         ),
       ),

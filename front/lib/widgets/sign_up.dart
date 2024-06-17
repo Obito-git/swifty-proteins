@@ -11,10 +11,13 @@ class _SignUpState extends State<SignUp> {
   final UserApiService _apiService = UserApiService();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isObscure = true;
   bool _isConfirmObscure = true;
+
+  final RegExp alnumRegex = RegExp(r'^[a-zA-Z0-9_]+$');
 
   void _toggleObscure() {
     setState(() {
@@ -39,7 +42,8 @@ class _SignUpState extends State<SignUp> {
       print('Password: $password');
       print('Confirm Password: $confirmPassword');
 
-      _apiService.signUp(UserCredentials(username: username, password: password));      
+      _apiService
+          .signUp(UserCredentials(username: username, password: password));
 
       // Clear form fields after submission
       _usernameController.clear();
@@ -66,7 +70,14 @@ class _SignUpState extends State<SignUp> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Username is required';
+                } else if (value.length < 6) {
+                  return 'Username must be at least 6 characters';
+                } else if (value.length > 20) {
+                  return 'Username must not exceed 20 characters';
+                } else if (!alnumRegex.hasMatch(value)) {
+                  return 'Username must contain only letters, numbers';
                 }
+
                 return null;
               },
             ),
@@ -77,7 +88,8 @@ class _SignUpState extends State<SignUp> {
                 labelText: 'Password',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(
+                      _isObscure ? Icons.visibility : Icons.visibility_off),
                   onPressed: _toggleObscure,
                 ),
               ),
@@ -85,7 +97,14 @@ class _SignUpState extends State<SignUp> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Password is required';
+                } else if (value.length < 6) {
+                  return 'Password must be at least 6 characters';
+                } else if (value.length > 20) {
+                  return 'Password must not exceed 20 characters';
+                } else if (!alnumRegex.hasMatch(value)) {
+                  return 'Password must contain only letters, numbers';
                 }
+
                 return null;
               },
             ),
@@ -96,7 +115,9 @@ class _SignUpState extends State<SignUp> {
                 labelText: 'Confirm Password',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
-                  icon: Icon(_isConfirmObscure ? Icons.visibility : Icons.visibility_off),
+                  icon: Icon(_isConfirmObscure
+                      ? Icons.visibility
+                      : Icons.visibility_off),
                   onPressed: _toggleConfirmObscure,
                 ),
               ),

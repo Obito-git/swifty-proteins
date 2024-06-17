@@ -8,8 +8,7 @@ enum Routes {
   //TODO: refactor structure
   root(route: "/", name: "root"),
   auth(route: "/auth", name: "auth"),
-  protein(route: "protein/:code", name: "protein"),
-  ;
+  protein(route: "protein/:code", name: "protein");
 
   final String route;
   final String name;
