@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:swifty_proteins/models/user_credentials.dart';
+import 'package:swifty_proteins/services/user_api_service.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -6,6 +8,7 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final UserApiService _apiService = UserApiService();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
@@ -27,15 +30,16 @@ class _SignUpState extends State<SignUp> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, process data
       String username = _usernameController.text.trim();
       String password = _passwordController.text.trim();
       String confirmPassword = _confirmPasswordController.text.trim();
 
-      // TODO: Implement your sign up logic here
+      // TODO: Implement logic
       print('Username: $username');
       print('Password: $password');
       print('Confirm Password: $confirmPassword');
+
+      _apiService.signUp(UserCredentials(username: username, password: password));      
 
       // Clear form fields after submission
       _usernameController.clear();

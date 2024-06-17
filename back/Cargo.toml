@@ -7,6 +7,8 @@ edition = "2021"
 entity_manager = { path = "lib/entity_manager" }
 # API
 rocket = { version = "0.5.0", features = ["json"] }
+validator = "0.18.1"
+validator_derive = "0.18.1"
 
 ## Security
 jsonwebtoken = "9.3.0"
@@ -17,3 +19,4 @@ hex = "0.4.3"
 
 # Utils
 lazy_static = "1.4.0"
+regex = "1.5.4"

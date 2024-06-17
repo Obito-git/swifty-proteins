@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:swifty_proteins/app_route.dart';
+import 'package:swifty_proteins/exception/bad_request_exception.dart';
 import 'package:swifty_proteins/models/user_credentials.dart';
 import 'package:swifty_proteins/services/user_api_service.dart';
 
@@ -27,18 +31,53 @@ class _SignInState extends State<SignIn> {
     });
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      String username = _usernameController.text.trim();
-      String password = _passwordController.text.trim();
+  Future<void> _submitForm() async {
+  if (_formKey.currentState!.validate()) {
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
 
-      _userApiService
-          .loginUser(UserCredentials(username: username, password: password));
-      //TODO: take token and redirect to home page
+    try {
+      String? token = await _userApiService
+          .signIn(UserCredentials(username: username, password: password));
 
-      _usernameController.clear();
-      _passwordController.clear();
+      if (token != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', token);
+
+        if (!mounted) return;
+        context.goNamed(Routes.root.name);
+      } else {
+        _showErrorDialog('Failed to retrieve token.');
+      }
+    } on BadRequestException catch (e) {
+      _showErrorDialog(e.toString());
+    } catch (e) {
+      _showErrorDialog("Something went wrong!");
     }
+
+    _usernameController.clear();
+    _passwordController.clear();
+  }
+}
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
