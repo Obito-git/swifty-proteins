@@ -11,3 +11,4 @@ for deploying it in container we should install:
 - cargo install diesel_cli --no-default-features --features sqlite
 - in back root (or possible to put in .env) export DATABASE_URL=database/sqlite:database.db
 - diesel setup
+- diesel migration run
