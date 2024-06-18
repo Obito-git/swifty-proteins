@@ -18,17 +18,10 @@ class _SignInState extends State<SignIn> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final UserApiService _userApiService = UserApiService();
   bool _isObscure = true;
-  bool _isConfirmObscure = true;
 
   void _toggleObscure() {
     setState(() {
       _isObscure = !_isObscure;
-    });
-  }
-
-  void _toggleConfirmObscure() {
-    setState(() {
-      _isConfirmObscure = !_isConfirmObscure;
     });
   }
 

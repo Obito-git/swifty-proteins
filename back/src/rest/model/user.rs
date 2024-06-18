@@ -7,8 +7,6 @@ use rocket::serde::{Deserialize, Serialize};
 use validator::ValidationError;
 use validator_derive::Validate;
 
-use crate::auth::sha512::convert;
-
 lazy_static! {
     static ref ALPHANUMERIC_REGEX: Regex = Regex::new(r"^[a-zA-Z0-9_]+$").unwrap();
 }
@@ -36,26 +34,25 @@ fn validate_credentials(value: &str) -> Result<(), ValidationError> {
     Ok(())
 }
 
-//TODO: move hash conversion to a guard if possible
-impl From<UserCredentialsDto> for UserCredentials {
-    fn from(credentials: UserCredentialsDto) -> Self {
+pub struct UserSigninCredentialsDto {
+    pub username: String,
+    pub password: String,
+}
+
+impl From<UserSigninCredentialsDto> for UserCredentials {
+    fn from(credentials: UserSigninCredentialsDto) -> Self {
         UserCredentials {
             username: credentials.username,
-            password: convert(&credentials.password),
+            password: credentials.password,
         }
     }
 }
 
-#[derive(Serialize)]
-#[serde(crate = "rocket::serde")]
-pub struct UserDataDto {
-    pub username: String,
-}
-
-impl From<UserData> for UserDataDto {
-    fn from(user: UserData) -> Self {
-        UserDataDto {
-            username: user.username,
+impl From<UserCredentialsDto> for UserCredentials {
+    fn from(credentials: UserCredentialsDto) -> Self {
+        UserCredentials {
+            username: credentials.username,
+            password: credentials.password,
         }
     }
 }

@@ -27,6 +27,7 @@ class UserApiService {
       } else if (response.statusCode == 400) {
         throw BadRequestException(jsonBody['message']);
       } else {
+        print("ERRRRRRRRRRRRRR ${response.statusCode}, ${response.body}");
         throw Exception('Something went wrong!');
       }
     } on BadRequestException {
