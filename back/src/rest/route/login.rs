@@ -19,17 +19,13 @@ pub async fn handle_signin(
         .map_err(Into::into)
 }
 
-//TODO: test errors
 #[post("/signup", format = "json", data = "<credentials>")]
 pub async fn handle_signup(
     db_conn: DbConn,
     credentials: Result<UserCredentialsDto, JsonErrorMessage>,
 ) -> Result<Custom<()>, (rocket::http::Status, Json<JsonErrorMessage>)> {
-    match credentials {
-        Ok(credentials_dto) => match signup_user(db_conn, credentials_dto).await {
-            Ok(_) => Ok(Custom(Status::Created, ())),
-            Err(e) => Err(e.into()),
-        },
-        Err(e) => Err(e.into()),
-    }
+    signup_user(db_conn, credentials?)
+        .await
+        .map(|_| Custom(Status::Created, ()))
+        .map_err(Into::into)
 }
