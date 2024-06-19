@@ -34,6 +34,8 @@ fn validate_credentials(value: &str) -> Result<(), ValidationError> {
     Ok(())
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(crate = "rocket::serde")]
 pub struct UserSigninCredentialsDto {
     pub username: String,
     pub password: String,
