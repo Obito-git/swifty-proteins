@@ -1,5 +1,5 @@
 use crate::auth::jwt::{generate_token, AccessToken};
-use crate::rest::model::error::{ErrorResponse, JsonErrorMessage};
+use crate::rest::model::error::ErrorResponse;
 use crate::rest::model::user::{UserCredentialsDto, UserSigninCredentialsDto};
 use entity_manager::pool::DbConn;
 use entity_manager::repository::user_repository;
