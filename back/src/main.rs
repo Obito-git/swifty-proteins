@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 
-use crate::rest::route::login::{handle_signin, handle_signup};
+use crate::rest::route::auth::{handle_signin, handle_signup};
 use crate::rest::route::proteins::get_protein_mock;
 use crate::rest::route::proteins::get_proteins_page;
 use entity_manager::pool::DbConn;
