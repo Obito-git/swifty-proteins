@@ -1,3 +1,4 @@
+use crate::models::error::DatabaseError;
 use crate::models::pagination::{DataPage, PageMetadata};
 use crate::models::protein::Protein;
 use crate::schema::proteins as proteins_table;
@@ -10,7 +11,7 @@ pub fn read_paginated(
     conn: &mut SqliteConnection,
     page: Option<i64>,
     filter: Option<String>,
-) -> Result<DataPage<Protein>, diesel::result::Error> {
+) -> Result<DataPage<Protein>, DatabaseError> {
     let page = page.unwrap_or(1) - 1;
     let filter_string = format!("%{}%", filter.unwrap_or("".to_string()));
 
@@ -43,13 +44,13 @@ pub fn read_paginated(
 pub fn read_by_code(
     conn: &mut SqliteConnection,
     code: &str,
-) -> Result<Option<Protein>, diesel::result::Error> {
+) -> Result<Option<Protein>, DatabaseError> {
     match proteins_table::table
         .filter(proteins_table::code.eq(code))
         .first::<Protein>(conn)
     {
         Ok(protein) => Ok(Some(protein)),
         Err(diesel::result::Error::NotFound) => Ok(None),
-        Err(err) => Err(err),
+        Err(err) => Err(err.into()),
     }
 }
