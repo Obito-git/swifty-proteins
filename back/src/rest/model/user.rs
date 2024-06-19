@@ -1,9 +1,9 @@
 use std::borrow::Cow;
 
-use entity_manager::models::user::{UserCredentials, UserData};
+use entity_manager::models::user::UserCredentials;
 use lazy_static::lazy_static;
 use regex::Regex;
-use rocket::serde::{Deserialize, Serialize};
+use rocket::serde::Deserialize;
 use validator::ValidationError;
 use validator_derive::Validate;
 

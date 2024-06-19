@@ -1,5 +1,3 @@
-use std::os::unix::thread;
-
 use crate::rest::model::pagination::DataPageDto;
 use crate::rest::model::protein::ProteinPageInnerDto;
 use crate::rest::service::protein_service;

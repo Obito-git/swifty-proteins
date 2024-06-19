@@ -1,5 +1,5 @@
 use crate::auth::jwt::{generate_token, AccessToken};
-use crate::rest::model::error::{ErrorResponse, JsonErrorMessage};
+use crate::rest::model::error::ErrorResponse;
 use crate::rest::model::user::{UserCredentialsDto, UserSigninCredentialsDto};
 use entity_manager::pool::DbConn;
 use entity_manager::repository::user_repository;
@@ -29,24 +29,6 @@ pub async fn signup_user(
         .await;
     match res {
         Ok(_) => Ok(()),
-        Err(dbError) => {
-            match dbError {
-                Error::DatabaseError(_, _) => {
-                    return Err(ErrorResponse::BadRequest(Some("Invalid data".to_string())))
-                }
-                _ => todo!(),
-            }
-            print!("Error: {:?}", dbError);
-            panic!()
-            /*
-            return match dbError {
-                diesel::result::Error ::UniqueViolation => {
-                    Err(ErrorResponse::UsernameTaken)
-                }
-                _ => Err(ErrorResponse::InternalServerError),
-            }
-            */
-        }
+        Err(db_error) => Err(db_error.into()),
     }
-    //res.map_err(|e| JsonErrorMessage::new(Status::BadRequest, e))
 }

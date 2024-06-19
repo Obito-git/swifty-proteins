@@ -5,7 +5,7 @@ use crate::rest::model::user::UserSigninCredentialsDto;
 use crate::rest::service::user_service::{signin_user, signup_user};
 use entity_manager::pool::DbConn;
 use rocket::http::Status;
-use rocket::response::status::{BadRequest, Custom};
+use rocket::response::status::Custom;
 use rocket::serde::json::Json;
 
 #[post("/signin", format = "json", data = "<credentials>")]
@@ -25,8 +25,8 @@ pub async fn handle_signup(
     match credentials {
         Ok(credentials_dto) => match signup_user(db_conn, credentials_dto).await {
             Ok(_) => Ok(Custom(Status::Created, ())),
-            Err(e) => panic!(),
+            Err(e) => Err(e.into()),
         },
-        Err(e) => Err((e.status, Json(e))),
+        Err(e) => Err(e.into()),
     }
 }

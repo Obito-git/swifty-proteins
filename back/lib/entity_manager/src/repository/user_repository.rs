@@ -1,10 +1,8 @@
 use crate::models::error::DatabaseError;
-use crate::models::user::{User, UserCredentials, UserData};
+use crate::models::user::{User, UserCredentials};
 use crate::schema::users as users_table;
 use crate::schema::users::{password, username};
 use diesel::prelude::*;
-use diesel::result::DatabaseErrorInformation;
-use diesel::result::Error::DatabaseError as DieselDatabaseError;
 use diesel::{RunQueryDsl, SqliteConnection};
 
 //TODO: merge filters
@@ -19,13 +17,7 @@ pub fn create(
         .execute(connection)
     {
         Ok(_) => Ok(()),
-        Err(e) => {
-            if let DieselDatabaseError(diesel::result::DatabaseErrorKind::UniqueViolation, _) = e {
-                Err(DatabaseError::UniqueViolation(e.message().to_string()))
-            } else {
-                Err(DatabaseError::InternalError)
-            }
-        }
+        Err(e) => Err(e.into()),
     }
 }
 

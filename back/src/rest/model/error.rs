@@ -1,9 +1,5 @@
+use entity_manager::models::error::DatabaseError;
 use rocket::serde::Serialize;
-
-type RestErrorResponse = (
-    rocket::http::Status,
-    rocket::serde::json::Json<JsonErrorMessage>,
-);
 
 pub enum ErrorResponse {
     UsernameTaken,
@@ -29,11 +25,25 @@ impl ErrorResponse {
     }
 }
 
-impl From<ErrorResponse> for RestErrorResponse {
+impl From<ErrorResponse>
+    for (
+        rocket::http::Status,
+        rocket::serde::json::Json<JsonErrorMessage>,
+    )
+{
     fn from(entity: ErrorResponse) -> Self {
         let status = entity.status();
         let message = JsonErrorMessage::new(status, entity.message());
         (status, rocket::serde::json::Json(message))
+    }
+}
+
+impl From<DatabaseError> for ErrorResponse {
+    fn from(entity: DatabaseError) -> Self {
+        match entity {
+            DatabaseError::UniqueViolation(_) => ErrorResponse::UsernameTaken,
+            DatabaseError::InternalError => ErrorResponse::InternalServerError,
+        }
     }
 }
 
@@ -48,4 +58,15 @@ impl JsonErrorMessage {
     pub fn new(status: rocket::http::Status, message: String) -> Self {
         JsonErrorMessage { message, status }
     }
+}
+
+impl From<JsonErrorMessage> for (
+    rocket::http::Status,
+    rocket::serde::json::Json<JsonErrorMessage>,
+) {
+
+    fn from(entity: JsonErrorMessage) -> Self {
+        (entity.status, rocket::serde::json::Json(entity))
+    }
+    
 }
