@@ -26,33 +26,35 @@ class _SignInState extends State<SignIn> {
   }
 
   Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      String username = _usernameController.text.trim();
-      String password = _passwordController.text.trim();
+  if (_formKey.currentState!.validate()) {
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
 
-      try {
-        String? token = await _userApiService
-            .signIn(UserCredentials(username: username, password: password));
+    try {
+      String? token = await _userApiService.signIn(
+        UserCredentials(username: username, password: password),
+      );
 
-        if (token != null) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('jwt_token', token);
+      if (token != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', token);
 
-          if (!mounted) return;
-          context.goNamed(Routes.root.name);
-        } else {
-          showErrorDialog('Failed to retrieve token.', context);
-        }
-      } on BadRequestException catch (e) {
-        showErrorDialog(e.toString(), context);
-      } catch (e) {
-        showErrorDialog("Something went wrong!", context);
+        if (!mounted) return;
+        context.goNamed(Routes.root.name);
+      } else {
+        showErrorDialog('Failed to retrieve token.', context);
       }
-
+    } on BadRequestException catch (e) {
+      showErrorDialog(e.toString(), context);
+    } catch (e) {
+      showErrorDialog("Something went wrong! Please try again later.", context);
+    } finally {
       _usernameController.clear();
       _passwordController.clear();
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

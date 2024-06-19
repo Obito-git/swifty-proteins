@@ -1,10 +1,7 @@
 class BadRequestException implements Exception {
-  final Map<String, dynamic> errors;
-
-  BadRequestException(this.errors);
+  final String message;
+  BadRequestException(this.message);
 
   @override
-  String toString() {
-    return '$errors';
-  }
+  String toString() => message;
 }

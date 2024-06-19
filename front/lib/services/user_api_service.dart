@@ -9,7 +9,6 @@ class UserApiService {
   Future<String?> signIn(UserCredentials credentials) async {
     String apiUrl = '$baseUrl/signin';
 
-    try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: <String, String>{
@@ -24,18 +23,13 @@ class UserApiService {
       final jsonBody = jsonDecode(response.body);
       if (response.statusCode == 200) {
         return jsonBody['token'];
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode == 400 || response.statusCode == 401) {
         throw BadRequestException(jsonBody['message']);
       } else {
-        print("ERRRRRRRRRRRRRR ${response.statusCode}, ${response.body}");
-        throw Exception('Something went wrong!');
+        throw Exception('Unexpected error occurred!');
       }
-    } on BadRequestException {
-      rethrow;
-    } catch (e) {
-      throw Exception('Something went wrong!');
-    }
-  }
+    } 
+  
 
   Future<void> signUp(UserCredentials credentials) async {
     String apiUrl = '$baseUrl/signup';
