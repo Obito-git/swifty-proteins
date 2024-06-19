@@ -1,5 +1,5 @@
 use crate::auth::jwt::{generate_token, AccessToken};
-use crate::rest::model::error::ErrorResponse;
+use crate::rest::model::error::{ErrorResponse, JsonErrorMessage};
 use crate::rest::model::user::{UserCredentialsDto, UserSigninCredentialsDto};
 use entity_manager::pool::DbConn;
 use entity_manager::repository::user_repository;
@@ -7,16 +7,15 @@ use entity_manager::repository::user_repository;
 pub async fn signin_user(
     db_conn: DbConn,
     user_credentials: UserSigninCredentialsDto,
-) -> AccessToken {
+) -> Result<AccessToken, ErrorResponse> {
     let user_login = user_credentials.username.clone();
     if db_conn
         .run(move |c| user_repository::exists(c, &user_credentials.into()))
         .await
     {
-        generate_token(&user_login)
+        Ok(generate_token(&user_login))
     } else {
-        //TODO: handle error
-        panic!("Invalid login or password")
+        Err(ErrorResponse::Unauthorized)
     }
 }
 

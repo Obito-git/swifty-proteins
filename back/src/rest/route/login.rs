@@ -13,7 +13,10 @@ pub async fn handle_signin(
     db_conn: DbConn,
     credentials: UserSigninCredentialsDto,
 ) -> Result<Json<AccessToken>, (rocket::http::Status, Json<JsonErrorMessage>)> {
-    Ok(Json(signin_user(db_conn, credentials).await))
+    signin_user(db_conn, credentials)
+        .await
+        .map(|token| Json(token))
+        .map_err(Into::into)
 }
 
 //TODO: test errors

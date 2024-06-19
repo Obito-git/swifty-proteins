@@ -5,6 +5,7 @@ pub enum ErrorResponse {
     UsernameTaken,
     InternalServerError,
     BadRequest(Option<String>),
+    Unauthorized,
 }
 
 impl ErrorResponse {
@@ -13,6 +14,7 @@ impl ErrorResponse {
             ErrorResponse::UsernameTaken => rocket::http::Status::Conflict,
             ErrorResponse::InternalServerError => rocket::http::Status::InternalServerError,
             ErrorResponse::BadRequest(_) => rocket::http::Status::BadRequest,
+            ErrorResponse::Unauthorized => rocket::http::Status::Unauthorized,
         }
     }
 
@@ -21,6 +23,7 @@ impl ErrorResponse {
             ErrorResponse::UsernameTaken => "Username is already taken".to_string(),
             ErrorResponse::InternalServerError => "Internal server error".to_string(),
             ErrorResponse::BadRequest(msg) => msg.clone().unwrap_or("Bad request".to_string()),
+            ErrorResponse::Unauthorized => "Invalid credentials".to_string(),
         }
     }
 }
@@ -60,13 +63,13 @@ impl JsonErrorMessage {
     }
 }
 
-impl From<JsonErrorMessage> for (
-    rocket::http::Status,
-    rocket::serde::json::Json<JsonErrorMessage>,
-) {
-
+impl From<JsonErrorMessage>
+    for (
+        rocket::http::Status,
+        rocket::serde::json::Json<JsonErrorMessage>,
+    )
+{
     fn from(entity: JsonErrorMessage) -> Self {
         (entity.status, rocket::serde::json::Json(entity))
     }
-    
 }
