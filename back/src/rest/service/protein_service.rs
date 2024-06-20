@@ -64,14 +64,18 @@ pub async fn get_protein_model(db_conn: DbConn, name: &str) -> Result<NamedFile,
                     }
                 }
             } else {
-                error!("No file associated with protein {}.", protein.code);
+                warn!(
+                    "No file associated with protein {}. HERE NEED TO INJECT AXEL METHOD",
+                    protein.code
+                );
                 Err(ErrorResponse::BadRequest(Some(
-                    "No file associated with this protein. Please check the protein's file metadata.".to_string(),
+                    "No file associated with this protein. HERE NEED TO INJECT AXEL METHOD"
+                        .to_string(),
                 )))
             }
         }
         Ok(None) => {
-            error!("Protein with code {} not found.", name_upper);
+            info!("Protein with code {} not found.", name_upper);
             Err(ErrorResponse::NotFound(format!(
                 "Protein with code: {}",
                 name_upper

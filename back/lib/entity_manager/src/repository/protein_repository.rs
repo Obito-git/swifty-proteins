@@ -3,7 +3,6 @@ use crate::models::pagination::{DataPage, PageMetadata};
 use crate::models::protein::Protein;
 use crate::schema::proteins as proteins_table;
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SqliteConnection, TextExpressionMethods};
-use log::error;
 
 const DEFAULT_PAGE_SIZE: i64 = 50;
 
@@ -52,9 +51,6 @@ pub fn read_by_code(
     {
         Ok(protein) => Ok(Some(protein)),
         Err(diesel::result::Error::NotFound) => Ok(None),
-        Err(err) => {
-            error!("Error while reading protein by code: {}. Error: {}", code, err);
-            Err(err.into())
-        }
+        Err(err) => Err(err.into()),
     }
 }

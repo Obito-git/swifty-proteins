@@ -397,8 +397,6 @@ version = "0.1.0"
 dependencies = [
  "diesel",
  "dotenvy",
- "env_logger",
- "log",
  "rocket_sync_db_pools",
 ]
 

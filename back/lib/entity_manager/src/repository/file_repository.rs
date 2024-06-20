@@ -3,6 +3,7 @@ use crate::{
     schema::file_metadata,
 };
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl, SqliteConnection};
+use log::error;
 
 pub fn read_by_id(
     conn: &mut SqliteConnection,
@@ -14,6 +15,9 @@ pub fn read_by_id(
     {
         Ok(file) => Ok(Some(file)),
         Err(diesel::result::Error::NotFound) => Ok(None),
-        Err(err) => Err(err.into()),
+        Err(err) => {
+            error!("Error while reading file by ID: {}. Error: {}", id, err);
+            Err(err.into())
+        }
     }
 }
