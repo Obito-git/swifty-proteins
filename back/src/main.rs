@@ -39,6 +39,7 @@ impl Fairing for CORS {
     }
 }
 
+//RUST_LOG=info cargo run
 #[launch]
 fn rocket() -> _ {
     env_logger::init();
@@ -47,7 +48,6 @@ fn rocket() -> _ {
         .mount(
             "/",
             routes![
-                //protected_route,
                 handle_signin,
                 handle_signup,
                 get_proteins_page,
