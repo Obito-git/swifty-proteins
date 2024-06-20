@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-void showErrorDialog(String message, BuildContext context) {
+void showErrorDialog(String message, BuildContext context,
+    {Function? afterPopCallback}) {
   if (!context.mounted) return;
   showDialog(
     context: context,
@@ -13,6 +14,9 @@ void showErrorDialog(String message, BuildContext context) {
             child: const Text('OK'),
             onPressed: () {
               Navigator.of(context).pop();
+              if (afterPopCallback != null) {
+                afterPopCallback();
+              }
             },
           ),
         ],

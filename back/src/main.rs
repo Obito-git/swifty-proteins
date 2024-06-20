@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate rocket;
 
-use crate::rest::route::auth::{handle_signin, handle_signup};
+use crate::rest::route::auth::{handle_signin, handle_signin_with_auth, handle_signup};
 use crate::rest::route::proteins::get_protein_mock;
 use crate::rest::route::proteins::get_proteins_page;
 use entity_manager::pool::DbConn;
@@ -9,7 +9,7 @@ use entity_manager::pool::DbConn;
 mod auth;
 mod rest;
 
-use rocket::fairing::{Fairing, Info, Kind};
+use rocket::fairing::{AdHoc, Fairing, Info, Kind};
 use rocket::http::{Header, Method, Status};
 use rocket::{Request, Response};
 
@@ -41,6 +41,8 @@ impl Fairing for CORS {
 
 #[launch]
 fn rocket() -> _ {
+    env_logger::init();
+    info!("Starting the Rocket server...");
     rocket::build()
         .mount(
             "/",
@@ -49,7 +51,8 @@ fn rocket() -> _ {
                 handle_signin,
                 handle_signup,
                 get_proteins_page,
-                get_protein_mock
+                get_protein_mock,
+                handle_signin_with_auth
             ],
         )
         .attach(DbConn::fairing())

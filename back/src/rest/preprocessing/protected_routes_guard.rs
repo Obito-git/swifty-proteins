@@ -2,7 +2,7 @@ use rocket::http::Status;
 use rocket::request::{FromRequest, Outcome, Request};
 
 use crate::auth::jwt::{get_access_secret, validate_token};
-
+use crate::rest::model::error::{ErrorResponse, JsonErrorMessage};
 
 //TODO: move it to the request preprocessing module, and provide validation for the username and password
 #[allow(dead_code)]
@@ -12,17 +12,23 @@ pub struct AuthenticatedUser {
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for AuthenticatedUser {
-    type Error = ();
+    type Error = JsonErrorMessage;
 
     async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         let keys: Vec<_> = request.headers().get("Authorization").collect();
         if keys.len() != 1 {
-            return Outcome::Error((Status::Unauthorized, ()));
+            return Outcome::Error((
+                Status::Unauthorized,
+                JsonErrorMessage::new(Status::Unauthorized, "Invalid session".to_string()),
+            ));
         }
 
         let token_str = keys[0];
         if !token_str.starts_with("Bearer ") {
-            return Outcome::Error((Status::Unauthorized, ()));
+            return Outcome::Error((
+                Status::Unauthorized,
+                JsonErrorMessage::new(Status::Unauthorized, "Invalid session".to_string()),
+            ));
         }
 
         let token = &token_str[7..];
@@ -31,7 +37,10 @@ impl<'r> FromRequest<'r> for AuthenticatedUser {
             Ok(claims) => Outcome::Success(AuthenticatedUser {
                 username: claims.claims.sub,
             }),
-            Err(_) => Outcome::Error((Status::Unauthorized, ())),
+            Err(_) => Outcome::Error((
+                Status::Unauthorized,
+                JsonErrorMessage::new(Status::Unauthorized, "Invalid session".to_string()),
+            )),
         }
     }
 }

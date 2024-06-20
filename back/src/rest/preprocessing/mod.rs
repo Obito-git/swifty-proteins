@@ -1,2 +1,2 @@
-mod protected_routes_guard;
-mod auth_guard;
+pub mod auth_guard;
+pub mod protected_routes_guard;

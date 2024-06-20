@@ -36,7 +36,6 @@ class _AuthScreenState extends State<AuthScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _option,
-            //onPressed: () => context.go(Routes.root.route),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -57,9 +56,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
-            OutlinedButton(
-                onPressed: () => context.goNamed(Routes.root.name),
-                child: const Text('ByPass Auth Screen'))
           ],
         ),
       ),

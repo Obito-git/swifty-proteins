@@ -6,6 +6,7 @@ pub enum ErrorResponse {
     InternalServerError,
     BadRequest(Option<String>),
     Unauthorized,
+    NotFound(String),
 }
 
 impl ErrorResponse {
@@ -15,6 +16,7 @@ impl ErrorResponse {
             ErrorResponse::InternalServerError => rocket::http::Status::InternalServerError,
             ErrorResponse::BadRequest(_) => rocket::http::Status::BadRequest,
             ErrorResponse::Unauthorized => rocket::http::Status::Unauthorized,
+            ErrorResponse::NotFound(_) => rocket::http::Status::NotFound,
         }
     }
 
@@ -24,6 +26,7 @@ impl ErrorResponse {
             ErrorResponse::InternalServerError => "Internal server error".to_string(),
             ErrorResponse::BadRequest(msg) => msg.clone().unwrap_or("Bad request".to_string()),
             ErrorResponse::Unauthorized => "Invalid credentials".to_string(),
+            ErrorResponse::NotFound(field_name) => format!("{} not found", field_name),
         }
     }
 }
