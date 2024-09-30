@@ -1,4 +1,5 @@
-target
+target/
+rust_analyzer/
 .idea
 .vagrant
 .env
